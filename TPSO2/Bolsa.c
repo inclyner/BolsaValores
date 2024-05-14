@@ -6,17 +6,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strsafe.h>
+#include <fcntl.h>  // Para _O_WTEXT
+#include <io.h>     // Para _setmode
 #include "utils.h"
 #include "utils.c"
 
 
+
 #ifdef _UNICODE
 typedef wchar_t TCHAR;
+#include <wchar.h>  // Para funções wide-char (w_tprintf, wscanf, etc.)
 #else
 typedef char TCHAR;
 #endif
 
 #define BUFFER_SIZE 1024
+
+
+
     
 
 DWORD WINAPI leComandos(void* data) {
@@ -26,34 +33,61 @@ DWORD WINAPI leComandos(void* data) {
 	double share_price;
 
 	wchar_t texto[20];
-	while (wcscmp(texto, L"sair") != 0) {
 
-		printf_s("\nestou na thread!");
-		fgetws(texto, sizeof(texto) / sizeof(wchar_t), stdin);
-		wprintf_s(L"\n texto: %ls\n", texto);
+	while (IsLeaving == 0) {
 
-		// se o utilizador escrever addc <nome-empresa> <numero_acoes> <preco_acao>
-		if (wcscmp(L"addc\n", texto) == 0) {
-			// le o nome da empresa
-			
-			
-			printf_s("tetinhas ");
+		TCHAR command[250];
+		TCHAR* cmd[102];
+		TCHAR* token;
+		int i = 0;
 
+		_tprintf(_T("Comando: "));
+		_fgetts(command, sizeof(command) / sizeof(command[0]), stdin);
+
+		TCHAR* cmd_Dup = _tcsdup(command);
+
+		token = _tcstok_s(cmd_Dup, _T(" "), &cmd_Dup);
+		while (token != NULL) {
+			cmd[i] = _tcsdup(token); // Use _tcsdup for TCHAR strings
+			i++;
+			token = _tcstok_s(NULL, _T(" "), &cmd_Dup);
 		}
 
+		if (_tcsstr(command, _T("listc")) != NULL) { //comando players
+			if (i == 1) {
+				_tprintf(_T("Entrou no listc\n"));
+			}
+			else {
+				_tprintf(_T("O comando não contém os parâmetros respetivos\n"));
+			}
+		}
+		else {
+			_tprintf(_T("Comando Inexistente \n"));
+		}
+
+	}
+
 		int num_matched = swscanf_s(texto, L"%4s %99s %d %lf", command, company_name, &num_shares, &share_price);
-		printf_s("num_matched: %d\n", num_matched);
+		_tprintf_s(_T("num_matched: %d\n"), num_matched);
 
 		
 
-	}
+	
 	return 0;
 }
 
 int _tmain(int argc, TCHAR* argv[])
 {
-	SetConsoleOutputCP(CP_UTF8);
-	SetConsoleCP(CP_UTF8);
+
+#ifdef UNICODE
+_setmode(_fileno(stdin), _O_WTEXT);
+_setmode(_fileno(stdout), _O_WTEXT);
+#endif
+
+	
+
+
+
 
 
 #pragma region mutex_garante_so_uma_instancia
@@ -64,7 +98,7 @@ int _tmain(int argc, TCHAR* argv[])
 
 	// Verifica se o mutex já existe
 	if (GetLastError() == ERROR_ALREADY_EXISTS) {
-		printf("Já existe uma instância do programa em execução.\n");
+		_tprintf(_T("Já existe uma instância do programa em execução.\n"));
 		// Fecha o handle do mutex
 		CloseHandle(hMutex);
 		return 0;
@@ -105,21 +139,21 @@ int _tmain(int argc, TCHAR* argv[])
 		if (result == ERROR_FILE_NOT_FOUND) {
 			result = RegCreateKeyExW(HKEY_LOCAL_MACHINE, nome_chave, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 			if (result != ERROR_SUCCESS) {
-				printf_s("Erro ao criar a chave no Registro.");
+				_tprintf_s(_T("Erro ao criar a chave no Registro."));
 				PrintErrorMessage(result);
 				return 1;
 			}
 			DWORD valor = 5;
 			result = RegSetValueExW(hKey, L"numUsers", 0, REG_DWORD, (BYTE*)(&valor), sizeof(DWORD));
 			if (result != ERROR_SUCCESS) {
-				printf_s("Erro ao definir o valor na chave do Registro.");
+				_tprintf_s(_T("Erro ao definir o valor na chave do Registro."));
 				RegCloseKey(hKey);
 				return 1;
 			}
 
 		}
 		else {
-			printf_s("Erro ao abrir a chave no Registro.");
+			_tprintf_s(_T("Erro ao abrir a chave no Registro."));
 			return 1;
 		}
 	}
@@ -129,12 +163,12 @@ int _tmain(int argc, TCHAR* argv[])
 		DWORD tamanho = sizeof(DWORD);
 		result = RegQueryValueExW(hKey, L"numUsers", NULL, &tipo, (BYTE*)(&valor), &tamanho);
 		if (result != ERROR_SUCCESS) {
-			printf_s("Erro a ler valor do registry.");
+			_tprintf_s(_T("Erro a ler valor do registry."));
 			RegCloseKey(hKey);
 			return 1;
 		}
 		// A chave já existe, não é necessário fazer nada
-		_tprintf_s(L"Sucesso!\nNúmero de utilizadores permitidos: %d", valor);
+		_tprintf_s(_T("Sucesso!\nNúmero de utilizadores permitidos: %d"), valor);
 		RegCloseKey(hKey);
 	}
 
@@ -158,7 +192,7 @@ int _tmain(int argc, TCHAR* argv[])
 
 
 
-	printf_s("\nchegou ao sleep");
+	_tprintf_s(_T("\nchegou ao sleep"));
 	Sleep(10000); // Aguarda 10 segundos
 
 

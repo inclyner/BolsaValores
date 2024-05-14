@@ -27,12 +27,12 @@ Utilizador LeUsers(TCHAR* filename) {
 	// Abre o arquivo para leitura
 	hFile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		printf("Erro ao abrir o arquivo.\n");
+		_tprintf(_T("Erro ao abrir o arquivo.\n"));
 	}
 
 	// Lê o conteúdo do arquivo
 	if (!ReadFile(hFile, buffer, BUFFER_SIZE, &bytesRead, NULL)) {
-		printf("Erro ao ler o arquivo.\n");
+		_tprintf(_T("Erro ao ler o arquivo.\n"));
 		CloseHandle(hFile);
 	}
 
@@ -40,7 +40,7 @@ Utilizador LeUsers(TCHAR* filename) {
 	CloseHandle(hFile);
 
 	// Imprime o conteúdo lido
-	printf("Conteúdo do arquivo:\n%s\n", buffer);
+	_tprintf(_T("Conteúdo do arquivo:\n%s\n"), buffer);
 	Utilizador a;
 	return a;
 
@@ -59,11 +59,11 @@ void PrintErrorMessage(DWORD errorCode) {
 		0,
 		NULL);
 	if (buffer != NULL) {
-		wprintf(L"Erro: %s\n", buffer);
+		_tprintf(_T("Erro: %s\n"), buffer);
 		LocalFree(buffer);
 	}
 	else {
-		wprintf(L"Erro desconhecido ocorreu.\n");
+		_tprintf(_T("Erro desconhecido ocorreu.\n"));
 	}
 }
 
