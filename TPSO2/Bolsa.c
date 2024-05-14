@@ -70,7 +70,7 @@ int _tmain(int argc, TCHAR* argv[])
 			result = RegCreateKeyEx(HKEY_LOCAL_MACHINE, nome_chave2, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 			if (result != ERROR_SUCCESS) {
 				printf_s("Erro ao criar a chave no Registro.");
-				//PrintErrorMessage(result);
+				PrintErrorMessage(result);
 				return 1;
 			}
 
