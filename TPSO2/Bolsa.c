@@ -31,6 +31,7 @@ DWORD WINAPI leComandos(void* data) {
 	wchar_t company_name[100];
 	int num_shares;
 	double share_price;
+	int IsLeaving = 0;
 
 	wchar_t texto[20];
 
@@ -53,9 +54,50 @@ DWORD WINAPI leComandos(void* data) {
 			token = _tcstok_s(NULL, _T(" "), &cmd_Dup);
 		}
 
-		if (_tcsstr(command, _T("listc")) != NULL) { //comando players
+		if (_tcsstr(command, _T("addc")) != NULL) { 
+			if (i == 4 ) {
+				_tprintf(_T("Entrou no addc\n"));
+				_tprintf(_T("1: %s,2: %s, 3 : %s"), cmd[1], cmd[2], cmd[3]);
+			}
+			else {
+				_tprintf(_T("O comando não contém os parâmetros respetivos\n"));
+			}
+		}
+		else if (_tcsstr(command, _T("listc")) != NULL) {
 			if (i == 1) {
 				_tprintf(_T("Entrou no listc\n"));
+			}
+			else {
+				_tprintf(_T("O comando não contém os parâmetros respetivos\n"));
+			}
+		}
+		else if (_tcsstr(command, _T("stock ")) != NULL) {
+			if (i == 2) {
+				_tprintf(_T("Entrou no stock \n"));
+			}
+			else {
+				_tprintf(_T("O comando não contém os parâmetros respetivos\n"));
+			}
+		}
+		else if (_tcsstr(command, _T("users")) != NULL) {
+			if (i == 1) {
+				_tprintf(_T("Entrou no users\n"));
+			}
+			else {
+				_tprintf(_T("O comando não contém os parâmetros respetivos\n"));
+			}
+		}
+		else if (_tcsstr(command, _T("pause")) != NULL) {
+			if (i == 2) {
+				_tprintf(_T("Entrou no pause\n"));
+			}
+			else {
+				_tprintf(_T("O comando não contém os parâmetros respetivos\n"));
+			}
+		}
+		else if (_tcsstr(command, _T("close")) != NULL) {
+			if (i == 1) {
+				_tprintf(_T("Entrou no close\n"));
 			}
 			else {
 				_tprintf(_T("O comando não contém os parâmetros respetivos\n"));
@@ -193,7 +235,7 @@ _setmode(_fileno(stdout), _O_WTEXT);
 
 
 	_tprintf_s(_T("\nchegou ao sleep"));
-	Sleep(10000); // Aguarda 10 segundos
+	Sleep(100000); // Aguarda 100 segundos
 
 
 
