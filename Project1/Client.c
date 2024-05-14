@@ -32,69 +32,74 @@ int _tmain(int argc, TCHAR* argv[])
         TCHAR* login_info[102];
         TCHAR* token;
         int i = 0;
+        int IsLoging = 0;
         
-        printf_s("Insira o Comando que pretende utilizar (login ou exit)\n");
-        printf_s("Comando Login -> login username password\n\n");
-        printf_s("Comando: ");
-        fgets(login_input, sizeof(login_input), stdin);
+        _tprintf(_T("Insira o Comando que pretende utilizar (login ou exit)\n"));
+        _tprintf(_T("Comando Login -> login username password\n\n"));
+        _tprintf(_T("Comando: "));
+        _fgetts(login_input, sizeof(login_input) / sizeof(login_input[0]), stdin);
 
-        TCHAR* login_Dup = strdup(login_input);
+        TCHAR* login_Dup = _tcsdup(login_input);
 
-        token = strtok_s(login_Dup, " ", &login_Dup);
+        token = _tcstok_s(login_Dup, _T(" "), &login_Dup);
         while (token != NULL) {
-            login_info[i] = _strdup(token); // Allocate memory and copy token
+            login_info[i] = _tcsdup(token); // Use _tcsdup for TCHAR strings
             i++;
-            token = strtok_s(NULL, " ", &login_Dup);
-        };
+            token = _tcstok_s(NULL, _T(" "), &login_Dup);
+        }
 
-        if (strstr(login_input, "login") != NULL) {
+        if (_tcsstr(login_input, _T("login")) != NULL) {
             if (i == 3) {
-                TCHAR username = login_info[1];
-                TCHAR passwrod = login_info[2];
+
+                _tprintf(_T("Username: %s\n"), login_info[1]);
+                _tprintf(_T("Password: %s\n"), login_info[2]);
+                IsLoging = 1;
             }
             else
-                printf_s("Comando de Login com parametros em falta.");
+                _tprintf(_T("Comando de Login com parâmetros em falta.\n"));
         }
-        else if (strstr(login_input, "sair") != NULL) {
-            printf_s("Obrigado por ter entrado no nosso Client side.");
+        else if (_tcsstr(login_input, _T("exit")) != NULL) {
+            _tprintf(_T("Obrigado por ter entrado no nosso programa de cliente.\n"));
             IsLogged = 1;
             IsLeaving = 1;
         }
         else {
-            printf("Comando Inexistente ou sem acesso a ele");
+            _tprintf(_T("Comando Inexistente ou sem acesso a ele\n"));
         }
 
+        if (IsLoging == 1) {
+            // Envia Dados pelo PIPE
 
-        // Envia Dados pelo PIPE
+            // Recebe Resposta
 
-        // Recebe Resposta
-
-        TCHAR resposta[250];
-        if (strstr(resposta, "Sucesso") != NULL) { // Sucesso e Entrou logo
-            printf_s("Utilizador Logado com Sucesso");
-            IsLogged = 1;
-        }
-        else if (strstr(resposta, "Erro") != NULL) {
-            printf_s("Autenticação Falhada - Erro no Login "); // Enviar se foi erro de Utilizador ou Password?
-        }
-        else { // Sucesso mas foi para Lista de Espera
-            printf_s("Foi colocado na Lista de Espera");
-
-            // Thread? //Check se pode entrar
-
-            printf_s("Escreva o Comando (exit) se pretender sair : ");
-            fgets(login_input, sizeof(login_input), stdin);
-
-            if (strstr(resposta, "exit") != NULL) {
+            TCHAR resposta[250];
+            if (_tcsstr(resposta, _T("Sucesso")) != NULL) { // Sucesso e Entrou logo
+                _tprintf(_T("Utilizador Logado com Sucesso\n"));
                 IsLogged = 1;
-                IsLeaving = 1;
             }
+            else if (_tcsstr(resposta, _T("Erro")) != NULL) {
+                _tprintf(_T("Autenticação Falhada - Erro no Login\n")); // Enviar se foi erro de Utilizador ou Password?
+            }
+            else { // Sucesso mas foi para Lista de Espera
+                _tprintf(_T("Foi colocado na Lista de Espera\n"));
+
+                // Thread? //Check se pode entrar
+
+                _tprintf(_T("Escreva o Comando (exit) se pretender sair, senão aguarde até conseguir entrar: "));
+                _fgetts(login_input, sizeof(login_input) / sizeof(login_input[0]), stdin);
+
+                if (_tcsstr(login_input, _T("exit")) != NULL) {
+                    IsLogged = 1;
+                    IsLeaving = 1;
+                }
+            }
+
+            memset(resposta, 0, sizeof(resposta));
         }
 
         memset(login_input, 0, sizeof(login_input));
         memset(login_info, 0, sizeof(login_info));
         memset(login_Dup, 0, sizeof(login_Dup));
-        memset(resposta, 0, sizeof(resposta));
 
     } while (IsLogged == 0);
     #pragma endregion
@@ -109,57 +114,57 @@ int _tmain(int argc, TCHAR* argv[])
         TCHAR* token;
         int i = 0;
 
-        printf_s("Comando: ");
-        fgets(command, sizeof(command), stdin);
+        _tprintf(_T("Comando: "));
+        _fgetts(command, sizeof(command) / sizeof(command[0]), stdin);
 
-        TCHAR* cmd_Dup = strdup(command);
+        TCHAR* cmd_Dup = _tcsdup(command);
 
-        token = strtok_s(cmd_Dup, " ", &cmd_Dup);
+        token = _tcstok_s(cmd_Dup, _T(" "), &cmd_Dup);
         while (token != NULL) {
-            cmd[i] = _strdup(token); // Allocate memory and copy token
+            cmd[i] = _tcsdup(token); // Use _tcsdup for TCHAR strings
             i++;
-            token = strtok_s(NULL, " ", &cmd_Dup);
-        };
+            token = _tcstok_s(NULL, _T(" "), &cmd_Dup);
+        }
 
-        if (strstr(command, "listc") != NULL) { //comando players
+        if (_tcsstr(command, _T("listc")) != NULL) { //comando players
             if (i == 1) {
-                printf_s("Entrou no listc\n");
+                _tprintf(_T("Entrou no listc\n"));
             }
             else {
-                printf_s("O comando não contém os parâmetros respetivos\n");
+                _tprintf(_T("O comando não contém os parâmetros respetivos\n"));
             }
         }
-        else if (strstr(command, "buy") != NULL) { //comando buy
+        else if (_tcsstr(command, _T("buy")) != NULL) { //comando buy
             if (i == 3) {
-                printf_s("Entrou no buy\n");
+                _tprintf(_T("Entrou no buy\n"));
             }
             else {
-                printf_s("O comando não contém os parâmetros respetivos\n");
+                _tprintf(_T("O comando não contém os parâmetros respetivos\n"));
             }
         }
-        else if (strstr(command, "sell") != NULL) { //comando sell
+        else if (_tcsstr(command, _T("sell")) != NULL) { //comando sell
             if (i == 3) {
-                printf_s("Entrou no sell\n");
+                _tprintf(_T("Entrou no sell\n"));
             }
             else {
-                printf_s("O comando não contém os parâmetros respetivos\n");
+                _tprintf(_T("O comando não contém os parâmetros respetivos\n"));
             }
         }
-        else if (strstr(command, "balance") != NULL) { //comando balance
+        else if (_tcsstr(command, _T("balance")) != NULL) { //comando balance
             if (i == 1) {
-                printf_s("Entrou no balance\n");
+                _tprintf(_T("Entrou no balance\n"));
             }
             else {
-                printf_s("O comando não contém os parâmetros respetivos\n");
+                _tprintf(_T("O comando não contém os parâmetros respetivos\n"));
             }
         }
-        else if (strstr(command, "exit") != NULL) { //comando exit
+        else if (_tcsstr(command, _T("exit")) != NULL) { //comando exit
             if (i == 1) {
                 IsLeaving = 1;
             }
         }
         else {
-            printf_s("Comando Inexistente \n");
+            _tprintf(_T("Comando Inexistente \n"));
         }
 
         // Limpa os Strings, para evitar lixo no loop do ciclo
@@ -171,5 +176,5 @@ int _tmain(int argc, TCHAR* argv[])
     #pragma endregion
 
 
-    printf_s("O programa vai encerrar...");
+    _tprintf(_T("O programa vai encerrar..."));
 }
