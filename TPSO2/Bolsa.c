@@ -39,7 +39,8 @@ int _tmain(int argc, TCHAR* argv[])
 	if (argc < 2 || argc > 3) {
 		printf_s("Número de argumentos incorreto.\n");
 		//CloseHandle(hMutex);
-		//return 1; // Sai do programa com erro  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! comentado temporariamente
+		//? comentado temporariamente!!!!!!!!!!!!
+		// return 1; // Sai do programa com erro 
 	//	wcscpy_s(argv[1], wcslen(L"teste") + 1, L"teste");// temporario tb
 	}
 	TCHAR nome_ficheiro_contas[20];
