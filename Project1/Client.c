@@ -32,8 +32,10 @@ int _tmain(int argc, TCHAR* argv[])
         TCHAR* login_info[102];
         TCHAR* token;
         int i = 0;
-
-        printf_s("Insira os seus dados de Login (username password): ");
+        
+        printf_s("Insira o Comando que pretende utilizar (login ou exit)\n");
+        printf_s("Comando Login -> login username password\n\n");
+        printf_s("Comando: ");
         fgets(login_input, sizeof(login_input), stdin);
 
         TCHAR* login_Dup = strdup(login_input);
@@ -44,6 +46,24 @@ int _tmain(int argc, TCHAR* argv[])
             i++;
             token = strtok_s(NULL, " ", &login_Dup);
         };
+
+        if (strstr(login_input, "login") != NULL) {
+            if (i == 3) {
+                TCHAR username = login_info[1];
+                TCHAR passwrod = login_info[2];
+            }
+            else
+                printf_s("Comando de Login com parametros em falta.");
+        }
+        else if (strstr(login_input, "sair") != NULL) {
+            printf_s("Obrigado por ter entrado no nosso Client side.");
+            IsLogged = 1;
+            IsLeaving = 1;
+        }
+        else {
+            printf("Comando Inexistente ou sem acesso a ele");
+        }
+
 
         // Envia Dados pelo PIPE
 
