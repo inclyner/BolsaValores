@@ -72,7 +72,7 @@ int _tmain(int argc, TCHAR* argv[])
 
             // Recebe Resposta
 
-            TCHAR resposta[250];
+            TCHAR resposta[250]; 
             if (_tcsstr(resposta, _T("Sucesso")) != NULL) { // Sucesso e Entrou logo
                 _tprintf(_T("Utilizador Logado com Sucesso\n"));
                 IsLogged = 1;
@@ -153,6 +153,14 @@ int _tmain(int argc, TCHAR* argv[])
         else if (_tcsstr(command, _T("balance")) != NULL) { //comando balance
             if (i == 1) {
                 _tprintf(_T("Entrou no balance\n"));
+            }
+            else {
+                _tprintf(_T("O comando não contém os parâmetros respetivos\n"));
+            }
+        }
+        else if (_tcsstr(command, _T("wallet")) != NULL) { //comando wallet //Falar com o professor sobre isto
+            if (i == 1) {
+                _tprintf(_T("Entrou no wallet\n"));
             }
             else {
                 _tprintf(_T("O comando não contém os parâmetros respetivos\n"));
